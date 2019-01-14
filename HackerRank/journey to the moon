@@ -1,0 +1,88 @@
+#include <iostream>
+#include <vector>
+#include <queue>
+
+using namespace std;
+
+
+void dfs(int x, int group);
+long long comb(long long a, int b);
+
+long long check[100001]={0,};
+vector<long long> v[100000+1];
+long long cnt[100001];
+
+int main()
+{
+    int m, n;
+    cin>>m>>n;
+
+    int u,w;
+
+    for(int i=0; i<n; i++)
+    {
+        cin>>u>>w;
+        v[u].push_back(w);
+        v[w].push_back(u);
+    }
+
+    int g=0;
+    for(int i=1; i<=m; i++)
+    {
+        if(!check[i])
+        {
+            dfs(i,g);
+            g++;
+        }
+    }
+
+    long long ans;
+    ans=comb(m,2);
+
+    for(int i=0; i<g; i++)
+    {
+        ans =ans-comb(cnt[i],2);
+    }
+
+    cout<<ans<<'\n';
+
+}
+
+
+void dfs(int x, int group)
+{
+    check[x]=1;
+    cnt[group]++;
+    for(int i=0; i<v[x].size(); i++)
+    {
+        int next = v[x][i];
+        if(!check[next])
+        {
+            dfs(next,group);
+        }
+    }
+}
+
+long long comb(long long a, int b)
+{
+    long long ans=1;
+    int div=1;
+
+    if(a<b)
+        return 0;
+
+    for(int i=0; i<b; i++)
+    {
+        ans*=a-i;
+    }
+    for(int i=b; i>=1; i--)
+    {
+        div*=i;
+    }
+
+    if (div!=0)
+        ans = ans/div;
+
+    return ans;
+}
+
